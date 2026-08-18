@@ -1,7 +1,7 @@
 const CATEGORIES=['Bags','Dresses','Jewellery','Hair Accessories','Travel Bags','Winter Collection','Summer Collection','Wedding','Home Décor','Shoes','Other'];
 const SESSION_COOKIE='ss_admin_session';
 const SESSION_HOURS=12;
-const PBKDF2_ITERATIONS=150000;
+const PBKDF2_ITERATIONS=10000;
 function json(data,status=200,extra={}){const h=new Headers({'content-type':'application/json; charset=utf-8','cache-control':'no-store',...extra});return new Response(JSON.stringify(data),{status,headers:h})}
 async function requestJson(request){try{return await request.json()}catch{return {}}}
 function hex(bytes){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('')}
@@ -55,7 +55,7 @@ async function adminRoutes(request,env,u,p,m){
 }
 export default {async fetch(request,env){const u=new URL(request.url),p=u.pathname,m=request.method;try{
  const ar=await adminRoutes(request,env,u,p,m);if(ar)return ar;
- if(p==='/api/health')return json({ok:true,app:'SS Collections by SunShah',environment:'uat',version:'4.3',d1:!!env.DB,r2:!!env.FILES,secure_admin:true});
+ if(p==='/api/health')return json({ok:true,app:'SS Collections by SunShah',environment:'uat',version:'4.3.1',d1:!!env.DB,r2:!!env.FILES,secure_admin:true});
  if(p==='/api/categories')return json({ok:true,categories:CATEGORIES});
  if(p==='/api/products'&&m==='GET'){await releaseExpired(env);const r=await env.DB.prepare(productSelect()+' ORDER BY p.featured DESC,p.id DESC').all();return json({ok:true,products:(r.results||[]).map(x=>({...x,image_url:x.primary_r2_key?'/media/'+x.primary_r2_key.split('/').map(encodeURIComponent).join('/'):(x.primary_asset_url||'')}))});}
  if(p.startsWith('/api/products/')&&m==='GET'){const key=decodeURIComponent(p.slice('/api/products/'.length));const product=await env.DB.prepare('SELECT * FROM products WHERE CAST(id AS TEXT)=? OR code=?').bind(key,key).first();if(!product)return json({ok:false,error:'Product not found'},404);const mr=await env.DB.prepare('SELECT * FROM product_media WHERE product_id=? ORDER BY is_primary DESC,sort_order,id').bind(product.id).all();return json({ok:true,product:{...product,media:(mr.results||[]).map(x=>({...x,url:mediaUrl(x)}))}});}
@@ -69,4 +69,4 @@ export default {async fetch(request,env){const u=new URL(request.url),p=u.pathna
  if(p.startsWith('/media/')&&m==='GET'){const key=decodeURIComponent(p.slice('/media/'.length));if(/^(orders|returns|payments)\//.test(key)){const a=await requireUser(request,env);if(a.error)return a.error;}const obj=await env.FILES.get(key);if(!obj)return new Response('Not found',{status:404});const headers=new Headers();obj.writeHttpMetadata(headers);headers.set('etag',obj.httpEtag);headers.set('cache-control','private, max-age=3600');return new Response(obj.body,{headers});}
  if(p.startsWith('/api/'))return json({ok:false,error:'API route not found'},404);
  return env.ASSETS.fetch(request);
- }catch(e){console.error(JSON.stringify({event:'request_error',path:p,error:String(e?.message||e)}));return json({ok:false,error:'UAT API error',detail:String(e?.message||e)},500)}} ,async scheduled(controller,env,ctx){ctx.waitUntil(releaseExpired(env));}};
+ }catch(e){console.error(JSON.stringify({event:'request_error',path:p,error:String(e?.message||e)}));return json({ok:false,error:'UAT API error',detail:String(e?.message||e),path:p},500)}} ,async scheduled(controller,env,ctx){ctx.waitUntil(releaseExpired(env));}};

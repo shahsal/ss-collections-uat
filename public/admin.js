@@ -1,6 +1,6 @@
 const $=s=>document.querySelector(s);const app=$('#adminApp');let me=null,tab='dashboard';
 function esc(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function money(n){return 'PKR '+Number(n||0).toLocaleString('en-PK')}
-async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',...opt});let j={};try{j=await r.json()}catch{}if(!r.ok)throw new Error(j.error||`Request failed (${r.status})`);return j}
+async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',...opt});let j={};try{j=await r.json()}catch{}if(!r.ok)throw new Error(j.detail?`${j.error||'Request failed'}: ${j.detail}`:(j.error||`Request failed (${r.status})`));return j}
 async function login(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));try{await api('/api/admin/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(d)});await boot()}catch(err){$('#loginMsg').innerHTML=`<div class="msg err">${esc(err.message)}</div>`}}
 $('#loginForm').onsubmit=login;
 async function boot(){try{me=(await api('/api/admin/me')).user;renderShell();openTab('dashboard')}catch{}}

@@ -69,3 +69,9 @@ This file preserves the approved project decisions from the ChatGPT development 
 - Real R2 image/video uploads from Admin.
 - Payment confirmation locks product permanently.
 - Dispatch evidence uploads and audit trail.
+
+
+## V4.3.1 corrective release
+- Reduced PBKDF2 cost for Cloudflare Free-tier UAT login compatibility.
+- Retained secure HttpOnly sessions and Owner/Agent model.
+- Improved UAT error diagnostics and removed legacy visible version labels.
