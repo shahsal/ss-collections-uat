@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ss-collections-uat",
+  "main": "./src/index.js",
+  "compatibility_date": "2026-08-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/media/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ss-collections-uat-db",
+      "database_id": "1e6dcf79-a082-4859-849a-7f35230858fb"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "ss-collections-uat-files"
+    }
+  ],
+  "triggers": {"crons": ["0 * * * *"]},
+  "observability": {"enabled": true,"head_sampling_rate": 1}
+}
