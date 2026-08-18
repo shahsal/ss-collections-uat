@@ -75,3 +75,8 @@ This file preserves the approved project decisions from the ChatGPT development 
 - Reduced PBKDF2 cost for Cloudflare Free-tier UAT login compatibility.
 - Retained secure HttpOnly sessions and Owner/Agent model.
 - Improved UAT error diagnostics and removed legacy visible version labels.
+
+
+## V4.3.2
+- Fixed secure Admin layout conflict affecting all pages.
+- Restored full-width workspace for Products, Orders, Creations, Journey, Events, Agents and Audit Trail.
