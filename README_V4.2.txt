@@ -34,3 +34,4 @@ V4.2 CUSTOMER BACKEND
 IMPORTANT
 The existing visual staff/admin screens still retain local-browser editing in this incremental UAT build. Do not enter real sensitive customer/payment data into the admin prototype yet. The next security migration is server-side Admin/Agent authentication + authenticated R2 uploads.
 deployment trigger for v2.4
+V4.2 deployment initiated - 18 August 2026
