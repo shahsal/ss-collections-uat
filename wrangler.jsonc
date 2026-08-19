@@ -3,12 +3,17 @@
   "name": "ss-collections-uat",
   "main": "./src/index.js",
   "compatibility_date": "2026-08-18",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*", "/media/*"]
+    "run_worker_first": [
+      "/api/*",
+      "/media/*"
+    ]
   },
   "d1_databases": [
     {
@@ -23,6 +28,16 @@
       "bucket_name": "ss-collections-uat-files"
     }
   ],
-  "triggers": {"crons": ["0 * * * *"]},
-  "observability": {"enabled": true,"head_sampling_rate": 1}
+  "triggers": {
+    "crons": [
+      "0 * * * *"
+    ]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "ai": {
+    "binding": "AI"
+  }
 }
