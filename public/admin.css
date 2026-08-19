@@ -31,3 +31,5 @@
   .admin-body > #adminApp.admin-shell{padding:14px;}
   .admin-body #adminApp .admin-grid{grid-template-columns:1fr;}
 }
+
+.modal-card{position:relative}.modal-global-close{position:absolute;right:12px;top:10px;z-index:5;border:0;background:#f7e6eb;color:#8f294a;border-radius:999px;width:34px;height:34px;font-size:20px;cursor:pointer}.modal.open{overflow:auto}.modal-card{max-height:calc(100vh - 32px);overflow:auto}

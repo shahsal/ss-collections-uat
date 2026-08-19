@@ -80,3 +80,7 @@ This file preserves the approved project decisions from the ChatGPT development 
 ## V4.3.2
 - Fixed secure Admin layout conflict affecting all pages.
 - Restored full-width workspace for Products, Orders, Creations, Journey, Events, Agents and Audit Trail.
+
+
+## V4.4.2
+Resolved UAT findings: live D1 order tracking, robust Product+R2 admin flow, guided ASK SS, exact Request Similar references, City-first event notice, Available-creation auto-publish to Shop, and universal modal exit rules.
