@@ -1,0 +1,52 @@
+name: SunShah V4.5 Preview Deployment
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sunshah-preview-deployment
+  cancel-in-progress: false
+
+jobs:
+  deploy-preview:
+    name: Deploy SunShah Preview
+    if: github.ref == 'refs/heads/sunshah-v4.5-beta'
+    runs-on: ubuntu-latest
+    environment: sunshah-preview
+
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+        with:
+          ref: sunshah-v4.5-beta
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify preview configuration
+        run: |
+          test -f wrangler.preview.jsonc
+          node -e "
+          const fs = require('fs');
+          const c = JSON.parse(fs.readFileSync('wrangler.preview.jsonc', 'utf8'));
+          if (c.name !== 'ss-collections-preview') process.exit(1);
+          if (c.d1_databases?.[0]?.database_name !== 'ss-collections-preview-db') process.exit(1);
+          if (c.r2_buckets?.[0]?.bucket_name !== 'ss-collections-preview-files') process.exit(1);
+          if (c.triggers?.crons?.length) process.exit(1);
+          console.log('Preview configuration verified');
+          "
+
+      - name: Deploy to Cloudflare Preview
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --config wrangler.preview.jsonc
